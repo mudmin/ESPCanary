@@ -1,0 +1,19 @@
+{
+	"name": "ESPCanary",
+	"description": "Create an ESP32 or ESP8266 OpenCanary Honeypot",
+	"keywords": "esp8266, ESP32, canary, honeypot, ftp, spiffs",
+	"authors":
+		{
+			"name": "AnotherMaker",
+			"email": "noreply@AnotherMaker.com",
+			"url": "https://AnotherMaker.com/"
+		},
+	"repository":
+	{
+		"type": "git",
+		"url": "https://github.com/mudmin/ESPCanary"
+	},
+	"url": "https://AnotherMaker.com/",
+	"frameworks": "Arduino",
+	"platforms": "*"
+}
