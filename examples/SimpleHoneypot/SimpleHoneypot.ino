@@ -44,6 +44,7 @@ void setup(void){
   #ifdef ESP8266
     wifi_set_macaddr(STATION_IF, &newMACAddress[0]);
   #elif defined ESP32
+    WiFi.mode(WIFI_STA);
     esp_wifi_set_mac(ESP_IF_WIFI_STA, &newMACAddress[0]);
   #endif
 
