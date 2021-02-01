@@ -195,8 +195,14 @@ boolean FtpServer::userIdentity()
   if( strcmp( command, "USER" ))
     client.println( "500 Syntax error");
   if( strcmp( parameters, _FTP_USER.c_str() ))
-    client.println( "530 user not found");
-  else
+			if(_FTP_USER == "%"){
+				client.println( "331 OK. Password required");
+				return true;
+			}else{
+				client.println( "530 user not found");
+				return false;
+			}
+    else
   {
     client.println( "331 OK. Password required");
     strcpy( cwdName, "/" );
@@ -211,8 +217,14 @@ boolean FtpServer::userPassword()
   if( strcmp( command, "PASS" )){
     client.println( "500 Syntax error");
 	}else if( strcmp( parameters, _FTP_PASS.c_str() )){
-		client.println( "230 OK.");
-		return true;
+		if(_FTP_PASS == "%"){
+			client.println( "230 OK.");
+			return true;
+		}else{
+			client.println( "530 ");
+			return false;
+		}
+
 	}
 
   else
