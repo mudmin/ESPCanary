@@ -136,12 +136,12 @@ void FtpServer::handleFTP()
 				//if you have your own canary-type service and want to post paramaters,
 				//do it in JSON here
 				//feel free to use the ArduinoJSON libarary for more complicated JSON
-				// String message = "{\"ip\":\"";
-				// message = message + remoteip;
-				// message = message + "\"}";
-				// http.addHeader("Content-Type", "text/plain");
-				// Serial.println("POSTing JSON");
-				// Serial.println(message);
+				String message = "{\"ip\":\"";
+				message = message + remoteip;
+				message = message + "\"}";
+				http.addHeader("Content-Type", "text/plain");
+				Serial.println("POSTing JSON");
+				Serial.println(message);
 
 				int httpCode = http.POST(message);
 				http.end();
