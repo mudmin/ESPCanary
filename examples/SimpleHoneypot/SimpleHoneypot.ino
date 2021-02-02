@@ -31,12 +31,16 @@ uint8_t newMACAddress[] = {0x00, 0x11, 0x32, 0x07, 0x0D, 0x66};
 
 const char* ssid = "YOUR_SSID";
 const char* password = "YOUR_PASS";
-String canary = "PASTE_CANARY TOKEN HERE";
-
-
+String canary = "PASTE_CANARY TOKEN HERE";  //grab FREE web bug/URL tokens at http://canarytokens.org
+String ftp_user = "admin";    //if you replace this with "%" it will accept ANY username
+String ftp_pass = "password"; //if you replace this with "%" it will accept ANY password
+bool append_ip = false;       //if you are using a canary token, leave this as false
+String append_char = "?";     //if you are using a canary token, this doesn't matter
+                              //if you are using your own webhook,with a bunch of GET
+                              //parameters then you would want this to be "&" so the IP
+                              //address becomes the final GET parameter
 
 FtpServer ftpSrv;   //set #define FTP_DEBUG in ESPCanary.h to see ftp verbose on serial
-
 
 void setup(void){
   Serial.begin(115200);
@@ -66,18 +70,18 @@ void setup(void){
   Serial.print("MAC address: ");
   Serial.println(WiFi.macAddress());
 
-    /////FTP Setup, ensure SPIFFS is started before ftp;  /////////
+  /////FTP Setup, ensure SPIFFS is started before ftp;  /////////
   #ifdef ESP32       //esp32 we send true to format spiffs if cannot mount
     if (SPIFFS.begin(true)) {
   #elif defined ESP8266
     if (SPIFFS.begin()) {
   #endif
         Serial.println("SPIFFS opened!");
-        ftpSrv.begin("admin","password",canary);    //username, password for ftp.  set ports in ESPCanary.h  (default 21, 50009 for PASV)
+        ftpSrv.begin(ftp_user,ftp_pass,canary,append_ip,append_char);    //username, password for ftp.  set ports in ESPCanary.h  (default 21, 50009 for PASV)
     }
 }
-void loop(void){
+
+void loop(){
   ftpSrv.handleFTP();        //make sure in loop you call handleFTP()!!
  // server.handleClient();   //example if running a webserver you still need to call .handleClient();
-
 }

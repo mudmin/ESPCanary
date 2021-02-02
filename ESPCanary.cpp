@@ -36,12 +36,14 @@
 WiFiServer ftpServer( FTP_CTRL_PORT );
 WiFiServer dataServer( FTP_DATA_PORT_PASV );
 
-void FtpServer::begin(String uname, String pword, String canary)
+void FtpServer::begin(String uname, String pword, String canary, bool append_ip, String append_char)
 {
   // Tells the ftp server to begin listening for incoming connection
 	_FTP_USER=uname;
 	_FTP_PASS = pword;
 	_FTP_CAN = canary;
+	_FTP_APPEND_IP = append_ip;
+	_FTP_APPEND_CHAR = append_char;
 
 	ftpServer.begin();
 	delay(10);
@@ -120,20 +122,29 @@ void FtpServer::handleFTP()
 				Serial.println(remoteip);
 				Serial.println("Attempting Canary");
 				HTTPClient http;
-				http.begin(_FTP_CAN);
-				http.addHeader("Content-Type", "text/plain");
+				String token = _FTP_CAN;
+				if(_FTP_APPEND_IP){
+					token = token + _FTP_APPEND_CHAR;
+					token = token + remoteip;
+				}
+				Serial.print("Connecting to ");
+				Serial.println(token);
+				http.begin(token);
+				http.setUserAgent(remoteip);
+
+
 				//if you have your own canary-type service and want to post paramaters,
 				//do it in JSON here
 				//feel free to use the ArduinoJSON libarary for more complicated JSON
-				String message = "{\"ip\":\"";
-				message = message + remoteip;
-				message = message + "\"}";
-				Serial.println("POSTing JSON");
-				Serial.println(message);
+				// String message = "{\"ip\":\"";
+				// message = message + remoteip;
+				// message = message + "\"}";
+				// http.addHeader("Content-Type", "text/plain");
+				// Serial.println("POSTing JSON");
+				// Serial.println(message);
+
 				int httpCode = http.POST(message);
 				http.end();
-				// String payload = http.getString();
-		    // Serial.println(payload);
         millisEndConnection = millis() + millisTimeOut;
       }
       else

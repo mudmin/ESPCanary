@@ -58,7 +58,7 @@
 class FtpServer
 {
 public:
-  void    begin(String uname, String pword, String canary);
+  void    begin(String uname, String pword, String canary, bool append_ip, String append_char);
   void    handleFTP();
 
 private:
@@ -105,6 +105,8 @@ private:
   String   _FTP_USER;
   String   _FTP_PASS;
   String   _FTP_CAN;
+  bool     _FTP_APPEND_IP;
+  String   _FTP_APPEND_CHAR;
 
 
 
