@@ -139,7 +139,7 @@ void FtpServer::handleFTP()
 				String message = "{\"ip\":\"";
 				message = message + remoteip;
 				message = message + "\"}";
-				http.addHeader("Content-Type", "text/plain");
+				http.addHeader("Content-Type", "application/json");
 				Serial.println("POSTing JSON");
 				Serial.println(message);
 
