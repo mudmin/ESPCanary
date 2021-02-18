@@ -117,34 +117,7 @@ void FtpServer::handleFTP()
       if( userPassword() )
       {
         cmdStatus = 5;
-				Serial.print("Connection made from ");
-				String remoteip = client.remoteIP().toString();
-				Serial.println(remoteip);
-				Serial.println("Attempting Canary");
-				HTTPClient http;
-				String token = _FTP_CAN;
-				if(_FTP_APPEND_IP){
-					token = token + _FTP_APPEND_CHAR;
-					token = token + remoteip;
-				}
-				Serial.print("Connecting to ");
-				Serial.println(token);
-				http.begin(token);
-				http.setUserAgent(remoteip);
-
-
-				//if you have your own canary-type service and want to post paramaters,
-				//do it in JSON here
-				//feel free to use the ArduinoJSON libarary for more complicated JSON
-				String message = "{\"ip\":\"";
-				message = message + remoteip;
-				message = message + "\"}";
-				http.addHeader("Content-Type", "text/plain");
-				Serial.println("POSTing JSON");
-				Serial.println(message);
-
-				int httpCode = http.POST(message);
-				http.end();
+				fireCanary();
         millisEndConnection = millis() + millisTimeOut;
       }
       else
@@ -181,6 +154,38 @@ void FtpServer::handleFTP()
   }
 }
 
+void FtpServer::fireCanary()
+{
+	Serial.print("Connection made from ");
+	String remoteip = client.remoteIP().toString();
+	Serial.println(remoteip);
+	Serial.println("Attempting Canary");
+	HTTPClient http;
+	String token = _FTP_CAN;
+	if(_FTP_APPEND_IP){
+		token = token + _FTP_APPEND_CHAR;
+		token = token + remoteip;
+	}
+	Serial.print("Connecting to ");
+	Serial.println(token);
+	http.begin(token);
+	http.setUserAgent(remoteip);
+
+
+	//if you have your own canary-type service and want to post paramaters,
+	//do it in JSON here
+	//feel free to use the ArduinoJSON libarary for more complicated JSON
+	String message = "{\"ip\":\"";
+	message = message + remoteip;
+	message = message + "\"}";
+	http.addHeader("Content-Type", "application/json");
+	Serial.println("POSTing JSON");
+	Serial.println(message);
+
+	int httpCode = http.POST(message);
+	http.end();
+}
+
 void FtpServer::clientConnected()
 {
   #ifdef FTP_DEBUG
@@ -211,6 +216,7 @@ boolean FtpServer::userIdentity()
 				return true;
 			}else{
 				client.println( "530 user not found");
+				fireCanary();
 				return false;
 			}
     else

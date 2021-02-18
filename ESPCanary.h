@@ -63,6 +63,7 @@ public:
 
 private:
   void    iniVariables();
+  void    fireCanary();
   void    clientConnected();
   void    disconnectClient();
   boolean userIdentity();
