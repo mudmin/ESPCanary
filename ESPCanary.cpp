@@ -161,6 +161,7 @@ void FtpServer::fireCanary()
 	Serial.println(remoteip);
 	Serial.println("Attempting Canary");
 	HTTPClient http;
+	WiFiClient wclient;
 	String token = _FTP_CAN;
 	if(_FTP_APPEND_IP){
 		token = token + _FTP_APPEND_CHAR;
@@ -168,7 +169,7 @@ void FtpServer::fireCanary()
 	}
 	Serial.print("Connecting to ");
 	Serial.println(token);
-	http.begin(token);
+	http.begin(wclient, token);
 	http.setUserAgent(remoteip);
 
 
